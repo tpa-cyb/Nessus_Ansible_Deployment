@@ -5,25 +5,19 @@
     state: directory
     mode: 0755
 
-- name: ensure that firewalld is running
-  service:
-    name: firewalld
-    state: started
-    enabled: true
-  become: true
-
-- name: Nessus - Open port 8834
-  firewalld:
-    port: 8834
-    permanent: true
-    state: enabled
-  become: true
-
 - name: Nessus - copy plugins from ansible-console
   copy:
     src: '{{ base_dir }}/{{ nessus_plugin_set }}'
     dest: '{{ dest_dir }}/{{ nessus_plugin_set }}'
     mode: 0755
+    md5sum: '{{ md5_plugin_set }}'
+
+- name: Nessus - copy rpm from ansible-console
+  copy:
+    src: "{{ base_dir }}/{{ nessus_package }}"
+    dest: "{{ dest_dir }}/{{ nessus_package }}"
+    mode: 0755
+    md5sum: '{{ md5_nessus_package }}'
 
 
 - name: Install nessus_agents according to the distrib

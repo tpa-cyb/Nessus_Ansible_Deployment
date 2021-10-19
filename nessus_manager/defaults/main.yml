@@ -2,7 +2,8 @@
 # defaults file for nessus_manager
 base_dir: 
 dest_dir:
-nessus_rpm:
+nessus_manager_rpm:
+md5_nessus_manager_rpm:
 proxy_username:
 proxy_password:
 proxy_port:

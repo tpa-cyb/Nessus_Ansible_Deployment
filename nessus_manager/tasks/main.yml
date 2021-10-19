@@ -6,27 +6,15 @@
 
 - name: Nessus - copy rpm from ansible-console
   copy:
-    src: "{{ base_dir }}{{ nessus_rpm }}"
-    dest: "{{ dest_dir }}{{ nessus_rpm }}"
+    src: "{{ base_dir }}{{ nessus_manager_rpm }}"
+    dest: "{{ dest_dir }}{{ nessus_manager_rpm }}"
     mode: 0755
-
+    md5sum: '{{ md5_nessus_manager_rpm }}'
 
 - name: Nessus - Install
   yum:
     name: "{{dest_dir }}{{ nm_rpm }}"
     state: present
-
-- name: ensure that firewalld is running
-  service:
-    name: firewalld
-    state: started
-    enabled: true
-
-- name: Nessus - Open port 8834
-  firewalld:
-    port: 8834
-    permanent: true
-    state: enabled
 
 - name: Nessus - Remove install dir
   file:

@@ -16,3 +16,5 @@ nessus_manager_host:
   - 3
 nessus_plugin_set:
 working_directory: '/home/tpa/Documents/GIT/Nessus_Ansible_Deployment/'
+nm_package:
+nm_package_md5:

@@ -2,6 +2,7 @@
 - hosts: nessus-agent-0
   user:
   become: true
+  become_methode:
   vars:
     nessus_manager_link_key: "{{ nessus_manager_link_key[0] }}"
     nessus_manager_port: "{{ nessus_manager_port[0] }}"
