@@ -1,0 +1,18 @@
+---
+# defaults file for nessus_agent
+base_dir: '/home'
+dest_dir: '/home'
+nessus_manager_link_key:
+  - 1
+  - 2
+  - 3
+nessus_manager_port:
+  - 1
+  - 2
+  - 3
+nessus_manager_host:
+  - 1
+  - 2
+  - 3
+nessus_plugin_set:
+working_directory: '/home/tpa/Documents/GIT/Nessus_Ansible_Deployment/'

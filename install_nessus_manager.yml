@@ -1,0 +1,6 @@
+---
+- hosts: nessus-manager-all
+  user: 
+  become: true
+  roles:
+    - nessus_manager

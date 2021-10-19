@@ -1,0 +1,11 @@
+# Installation for RH
+- name: Nessus - copy rpm from ansible-console
+  copy:
+    src: "{{ base_dir }}/{{ nessus_deb }}"
+    dest: "{{ dest_dir }}/{{ nessus_deb }}"
+    mode: 0755
+
+- name: Nessus - Install
+  apt:
+    name: "{{ dest_dir }}{{ nm_deb }}"
+    state: present

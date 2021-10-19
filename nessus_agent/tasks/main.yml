@@ -1,0 +1,54 @@
+---
+- name: Nessus - Create temp install directory
+  ansible.builtin.file:
+    path: '{{ dest_dir }}'
+    state: directory
+    mode: 0755
+
+- name: ensure that firewalld is running
+  service:
+    name: firewalld
+    state: started
+    enabled: true
+  become: true
+
+- name: Nessus - Open port 8834
+  firewalld:
+    port: 8834
+    permanent: true
+    state: enabled
+  become: true
+
+- name: Nessus - copy plugins from ansible-console
+  copy:
+    src: '{{ base_dir }}/{{ nessus_plugin_set }}'
+    dest: '{{ dest_dir }}/{{ nessus_plugin_set }}'
+    mode: 0755
+
+
+- name: Install nessus_agents according to the distrib
+  import_tasks: '{{working_directory}}nessus_agent/tasks/redhat.yml'
+  when: ansible_facts['os_family']|lower == 'redhat'
+
+- name: Install
+  import_tasks: '{{working_directory}}nessus_agent/tasks/ubuntu.yml'
+  when: ansible_facts['os_family']|lower == 'ubuntu'
+
+
+- name: NessusAgent - Configure agent
+  command: /opt/nessus_agent/sbin/nessuscli agent link --host={{ nessus_manager_host }} --port={{ nessus_manager_port }} --key={{ nessus_manager_link_key }}
+  register: output_config
+  changed_when: myoutput.rc != 0
+  become: true
+
+- name: NessusAgent - Configure agent plugins
+  command: /opt/nessus_agent/sbin/nessuscli agent update --file={{ dest_dir }}/{{ nessus_plugin_set }}
+  register: output_plugins
+  changed_when: myoutput.rc != 0
+  become: true
+
+
+- name: Nessus - Remove install dir
+  file:
+    state: absent
+    path: '{{ dest_dir }}'

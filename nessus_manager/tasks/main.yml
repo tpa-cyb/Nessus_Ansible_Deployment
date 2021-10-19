@@ -1,0 +1,45 @@
+---
+# tasks file for nessus_manager
+- name: Nessus - Create temp install directory
+  file: path={{ dest_dir }} state=directory
+  mode: 0755
+
+- name: Nessus - copy rpm from ansible-console
+  copy:
+    src: "{{ base_dir }}{{ nessus_rpm }}"
+    dest: "{{ dest_dir }}{{ nessus_rpm }}"
+    mode: 0755
+
+
+- name: Nessus - Install
+  yum:
+    name: "{{dest_dir }}{{ nm_rpm }}"
+    state: present
+
+- name: ensure that firewalld is running
+  service:
+    name: firewalld
+    state: started
+    enabled: true
+
+- name: Nessus - Open port 8834
+  firewalld:
+    port: 8834
+    permanent: true
+    state: enabled
+
+- name: Nessus - Remove install dir
+  file:
+    state: absent
+    path: "{{ dest_dir }}"
+    mode: 0755
+
+- name: Nessus - Update proxy options
+  command: /opt/nessus/sbin/nessuscli fix --secure --set {{ item }}
+  with_items:
+    - proxy={{ proxy_host }}
+    - proxy_port={{ proxy_port }}
+    - proxy_username={{ proxy_username }}
+    - proxy_password={{ proxy_password }}
+  changed_when: myoutput.rc != 0
+  become: true

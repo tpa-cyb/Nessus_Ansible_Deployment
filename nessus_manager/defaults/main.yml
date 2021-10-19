@@ -1,0 +1,9 @@
+---
+# defaults file for nessus_manager
+base_dir: 
+dest_dir:
+nessus_rpm:
+proxy_username:
+proxy_password:
+proxy_port:
+proxy_host:
